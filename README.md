@@ -183,4 +183,4 @@ Algunos parámetros fáciles de tunear en `game.js`:
 
 ## Licencia
 
-Proyecto de uso libre con fines educativos y de práctica.
+Proyecto de uso libre con fines educativos y de práctica. v2
