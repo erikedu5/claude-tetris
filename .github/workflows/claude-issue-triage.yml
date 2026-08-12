@@ -54,5 +54,7 @@ jobs:
                - Sugerencias de próximos pasos para implementar la solución, sin escribir el
                  código todavía — esto es solo diagnóstico.
                Firma el comentario indicando que fue generado automáticamente por Claude.
+               El comentario debe estar en formato Markdown válido para que GitHub lo
+               renderice correctamente (encabezados, listas, bloques de código, etc.).
             5. No hagas cambios de código ni abras PRs en este workflow, solo labels y el
                comentario de diagnóstico.
