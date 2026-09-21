@@ -251,3 +251,35 @@ kbd {
 #restart-btn:hover {
   background: var(--restart-bg-hover);
 }
+
+/* ---- Skin picker ---- */
+.skin-picker {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.skin-select {
+  background: var(--kbd-bg);
+  border: 1px solid var(--board-border);
+  border-radius: 24px;
+  color: var(--kbd-color);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--value-color) 50%), linear-gradient(135deg, var(--value-color) 50%, transparent 50%);
+  background-position: calc(100% - 14px) center, calc(100% - 9px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 24px;
+}
+
+.skin-select:hover,
+.skin-select:focus {
+  border-color: var(--value-color);
+}
