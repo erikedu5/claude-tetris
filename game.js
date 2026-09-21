@@ -42,6 +42,12 @@ const overlayTitle = document.getElementById('overlay-title');
 const overlayScore = document.getElementById('overlay-score');
 const restartBtn = document.getElementById('restart-btn');
 const themeToggle = document.getElementById('theme-toggle');
+const pauseMenuExtra = document.getElementById('pause-menu-extra');
+const pauseResumeBtn = document.getElementById('pause-resume-btn');
+const pauseRestartBtn = document.getElementById('pause-restart-btn');
+const pauseControlsBtn = document.getElementById('pause-controls-btn');
+const pauseControlsList = document.getElementById('pause-controls-list');
+const pauseLevelSelect = document.getElementById('pause-level-select');
 
 const THEME_KEY = 'tetris-theme';
 let gridColor = '#22222e';
@@ -68,6 +74,30 @@ themeToggle.addEventListener('change', () => {
 });
 
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
+
+const START_LEVEL_KEY = 'tetris-start-level';
+let startLevel = Math.min(10, Math.max(1, parseInt(localStorage.getItem(START_LEVEL_KEY), 10) || 1));
+
+function dropIntervalForLevel(lvl) {
+  return Math.max(100, 1000 - (lvl - 1) * 90);
+}
+
+function applyStartLevel(value) {
+  const n = Math.min(10, Math.max(1, parseInt(value, 10) || 1));
+  startLevel = n;
+  pauseLevelSelect.value = String(n);
+  localStorage.setItem(START_LEVEL_KEY, String(n));
+}
+
+function initStartLevel() {
+  // startLevel is already loaded from localStorage above (before init() runs);
+  // this just syncs the <select> UI to match it.
+  pauseLevelSelect.value = String(startLevel);
+}
+
+pauseLevelSelect.addEventListener('change', () => {
+  applyStartLevel(pauseLevelSelect.value);
+});
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
@@ -134,7 +164,7 @@ function clearLines() {
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
     level = Math.floor(lines / 10) + 1;
-    dropInterval = Math.max(100, 1000 - (level - 1) * 90);
+    dropInterval = dropIntervalForLevel(level);
     updateHUD();
   }
 }
@@ -251,12 +281,17 @@ function endGame() {
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
   overlay.classList.remove('hidden');
+  pauseMenuExtra.classList.add('hidden');
+  pauseControlsList.classList.add('hidden');
 }
 
 function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    pauseMenuExtra.classList.add('hidden');
+    pauseControlsList.classList.add('hidden');
+    overlay.classList.add('hidden');
     lastTime = performance.now();
     loop(lastTime);
   } else {
@@ -264,6 +299,8 @@ function togglePause() {
     overlayTitle.textContent = 'PAUSA';
     overlayScore.textContent = '';
     overlay.classList.remove('hidden');
+    pauseMenuExtra.classList.remove('hidden');
+    pauseControlsList.classList.add('hidden');
   }
 }
 
@@ -288,22 +325,29 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = startLevel;
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = dropIntervalForLevel(startLevel);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
   spawn();
   updateHUD();
   overlay.classList.add('hidden');
+  pauseMenuExtra.classList.add('hidden');
+  pauseControlsList.classList.add('hidden');
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
 document.addEventListener('keydown', e => {
   if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'Escape') {
+    if (document.activeElement === pauseLevelSelect) return; // let the select close its own dropdown
+    togglePause();
+    return;
+  }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
@@ -328,6 +372,12 @@ document.addEventListener('keydown', e => {
 });
 
 restartBtn.addEventListener('click', init);
+pauseResumeBtn.addEventListener('click', togglePause);
+pauseRestartBtn.addEventListener('click', init);
+pauseControlsBtn.addEventListener('click', () => {
+  pauseControlsList.classList.toggle('hidden');
+});
 
 initTheme();
 init();
+initStartLevel();
