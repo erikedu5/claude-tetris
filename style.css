@@ -251,3 +251,136 @@ kbd {
 #restart-btn:hover {
   background: var(--restart-bg-hover);
 }
+
+/* ---- Leaderboard / Stats ---- */
+.leaderboard-section {
+  gap: 10px;
+}
+
+.leaderboard-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  counter-reset: leaderboard-rank;
+}
+
+.leaderboard-entry {
+  counter-increment: leaderboard-rank;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.leaderboard-entry::before {
+  content: counter(leaderboard-rank) ".";
+  color: var(--label-color);
+  font-size: 10px;
+  margin-right: 4px;
+}
+
+.leaderboard-name {
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.leaderboard-score {
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--value-color);
+  font-weight: 700;
+}
+
+.leaderboard-empty {
+  list-style: none;
+  font-size: 12px;
+  color: var(--label-color);
+}
+
+.leaderboard-highlight {
+  background: var(--kbd-bg);
+  box-shadow: 0 0 0 1px var(--board-border);
+}
+
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stats-value {
+  font-size: 16px;
+}
+
+.leaderboard-reset-btn {
+  margin-top: 4px;
+  background: transparent;
+  color: var(--label-color);
+  border: 1px solid var(--board-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.leaderboard-reset-btn:hover {
+  background: var(--kbd-bg);
+  color: var(--fg);
+}
+
+#gameover-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+#gameover-extra.hidden {
+  display: none;
+}
+
+.leaderboard-name-input {
+  background: var(--board-bg);
+  border: 1px solid var(--board-border);
+  color: var(--fg);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  text-align: center;
+  width: 160px;
+}
+
+.leaderboard-name-input:focus {
+  outline: none;
+  border-color: var(--value-color);
+}
+
+.leaderboard-submit-btn {
+  background: var(--restart-bg);
+  color: var(--restart-color);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.15s;
+}
+
+.leaderboard-submit-btn:hover {
+  background: var(--restart-bg-hover);
+}
+
+#restart-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
